@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title> object </title>
+    </head>
+    <body>
+        <p id='stu' class="content"></p>
+        <p id='cls' class="content"></p>
+        <script>
+            var student = {
+                name : {
+                    first : '군오',
+                    last : '김'
+                },
+                classes : ['JavaScript', 'Python']
+            }
+            console.log(student.name.last + student.name.first)
+            console.log(student.classes[0] + ',' + student.classes[1])
+
+            var stu = document.getElementById('stu')
+            stu.innerText = student.name.last + student.name.first
+            var cls = document.getElementById('cls')
+            cls.innerText = student.classes[0] + ',' + student.classes[1]
+        </script>
+        
+    </body>
+</html>

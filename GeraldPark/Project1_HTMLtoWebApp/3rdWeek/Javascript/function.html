@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title> function1 </title>
+    </head>
+    <body>
+        <script>
+            var sayHello = function(){
+                console.log('Hello~');
+            }
+            function square(x){
+                return x * x 
+            }
+            function operator(x, y, func){
+                return func(x,y)
+            }
+            function add(a,b) {return a+b}
+            function subtract(a,b) {return a-b}
+            // 함수 실헹 
+            // 함수를 변수화 시켜사용할수 있음..
+            sayHello();
+            sayHello();
+            sayHello();
+
+            square(2);
+            square(0.6);
+            square(56);
+
+            var ret = square(7)
+            console.log(ret)
+
+            console.log(operator(4,2,add))
+            console.log(operator(4,2,subtract))
+
+             
+        </script>
+    </body>
+</html>
