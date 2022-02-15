@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+    <head><title>javascript 조건문 - if: 시간에 따른 인삿말 출렬</title></head>
+    <body>
+        <h1 id="current"></h1>
+        <p id="content"></p>
+        <script>
+            var time = new Date().getHours(); //0~23
+            document.getElementById("current").innerHTML = "현재시간은 " + time + "시 입니다";
+
+            if (time < 6){
+                document.getElementById("content").innerHTML = "Good Night :)";
+            }else if (time < 12){
+                document.getElementById("content").innerHTML = "Good Morning :)";
+            }else if (time < 18){
+                document.getElementById("content").innerHTML = "Good Afternoon :)";
+            }else{
+                document.getElementById("content").innerHTML = "Good Evening :)";
+            }
+        </script>
+    </body>
+    
+</html>
