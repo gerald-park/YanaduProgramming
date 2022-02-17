@@ -1,0 +1,23 @@
+
+<!DOCTYPE html> 
+<html>
+    <head>
+        <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+    </head>
+    <body>
+        <script>
+            var obj = {
+                a: 'JSON',
+                b: 'NOSJ',
+                arr: [1,2,'test']
+            }
+            console.log(obj);
+
+            var json = JSON.stringify(obj);
+            console.log(json);
+
+            var newObj = JSON.parse(json);
+            console.log(newObj);
+        </script>
+    </body>
+</html>
