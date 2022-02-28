@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <style>
+            div{
+                width: 300px;
+                height: 100px;
+                background-color: blue;
+                color: white;
+            }
+            div#rotateDiv{
+                width: 300px;
+                height: 100px;
+                background-color: yellow;
+                color: black;
+                transform : rotate(40deg)
+            }
+            div#scaleDiv{
+                margin: 100px;
+                width: 200px;
+                height: 100px;
+                background-color: yellow;
+                color: black;
+                transform: scale(2,4);
+            }
+            div#translateDiv{
+                width: 300px;
+                height: 100px;
+                background-color: yellow;
+                color: black;
+                transform:translate(100px,150px);
+            }
+        </style>
+    </head>
+    <body>
+        <h1>CSS Advanced</h1>
+        <p> Rotate Div</p>
+        <div>
+                그냥 일반적 div
+        </div>
+        <div id="rotateDiv">
+            Rotate 함수를 적용한 div
+        </div>
+        <div id="scaleDiv">
+            Scale를 적용한 div
+        </div>
+        <div id="translateDiv">
+            translate 를 적용한 div
+        </div>
+    </body>
+</html>

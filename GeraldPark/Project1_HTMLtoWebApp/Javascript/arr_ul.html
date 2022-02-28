@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+    <head><title>javascript 조건문 - while</title></head>
+    <body>
+        <ul id="list"> </ul>
+        <script>
+            var list = document.getElementById('list');
+            var products = ['데스크탑', '모니터', '노트북', '스피커', '마우스'];
+
+            var html = '';
+            for (var product of products){
+                html += '<li>' + product + '</li>';
+            }
+            list.innerHTML = html;
+        </script>
+    </body>
+    
+</html>
