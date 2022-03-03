@@ -29,7 +29,7 @@ function liTemplate(text, checked) {
     li.append(inputTemplate(text, checked)); 
     li.append(text);
     li.append(buttonTemplate(text));
-
+    console.log("liTemplate");
     li.click(function(event){
         var el = $(event.target); //클릭된 타겟의 이벤트를 받아옴 
         console.log(el.data("value")); // 해당 이트가 발생한 태그의 값을 읽어옴 
