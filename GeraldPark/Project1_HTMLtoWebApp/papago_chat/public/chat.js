@@ -1,9 +1,12 @@
 
 var curIndex = 0;
 var language = "ko";
+var aws = 'http://15.165.236.58:3000';
+var lcoal =  'http://localhost:3000';
+var runtime = aws;
 
 setInterval(function() {
-    $.ajax(`http://localhost:3000/receive?from=${curIndex}`).done(function(data){
+    $.ajax(`${runtime}/receive?from=${curIndex}`).done(function(data){
         for(const message of data.messages) {
             console.log(message);
             $("#messages").append(
@@ -27,7 +30,7 @@ $("#sendButton").click(function(){
         message.en = $("#chatInput").val();
     console.log(message);
     $.ajax({
-        url: "http://localhost:3000/send",
+        url: `${runtime}/send`,
         method: "POST",
         data: JSON.stringify(message),
         dataType:"json",

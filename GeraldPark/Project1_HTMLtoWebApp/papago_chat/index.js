@@ -22,7 +22,6 @@ app.post('/send', function(req, res){
         en: req.body.en
     };
     console.log(message);
-    console.log(message.ko.length  + ' ' + message.en.length)
     var options = {
         url : "https://openapi.naver.com/v1/papago/n2mt",
         form:{
@@ -36,7 +35,6 @@ app.post('/send', function(req, res){
             "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8"
         }
     };
-    console.log(options)
     request.post(options, function(error, respose){
         console.log(JSON.parse(respose.body));
         var result = JSON.parse(respose.body).message.result;
