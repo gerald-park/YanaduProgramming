@@ -1,16 +1,17 @@
 {
-  "name": "restfulapi",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.17.3",
+    "request": "^2.88.2"
+  },
+  "name": "papago_chat",
   "version": "1.0.0",
-  "main": "index.js",
+  "main": "chat.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node index.js"
   },
   "author": "",
   "license": "ISC",
-  "dependencies": {
-    "express": "^4.17.3"
-  },
-  "devDependencies": {},
   "description": ""
 }
