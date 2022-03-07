@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+    <head><title>javascript 조건문 - return max</title></head>
+    <body>
+        <script>
+            function max(arr) {
+                var _max = -9999;
+                for (var i of arr){
+                    if(i > _max){
+                        _max = i;
+                    }
+                }
+                return _max;
+            }
+            console.log('가장 큰 수는 ' + max([1,54,2,74,4,6,3,64]) + " 입니다.");
+        </script>
+    </body>
+    
+</html>

@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>AJAX 실습 1</title>
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+</head>
+<body>
+    내용을 추가 해보겠습니다. 
+    이야 자동으로 반영되네
+    ...
+    <script>
+    $.ajax('data.txt')
+        .done(function(data){
+            //성공시 실행할 코드 
+            console.log(data)
+        })
+        .fail(function(rorror){
+            //성공시 실행할 코드 
+            console.log("에러")
+        })
+        .always(function(){
+            //항상 실행할 코드 
+            console.log("ajax호출이 완료되면 실행합니다.")
+        });
+    console.log("ajax호출은 비동기 호출입니다.")
+    </script>
+</body>
+</html>

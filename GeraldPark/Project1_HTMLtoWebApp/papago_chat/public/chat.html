@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+        <style>
+            #messages {
+                width: 500px;
+                height: 500px;
+                overflow: scroll;
+                background: #eeeeee;
+            }
+        </style>        
+    </head>
+    <body>
+        <div id="messages"></div>
+        <div>
+            <select id="selectBox">
+                <option value="ko">한국어</option>
+                <option value="en">영어</option>
+            </select>
+            아이디 : <input type="text" id="senderId" />
+            내용 : <input type="text" id="chatInput" />
+            <button id="sendButton">전송</button>
+        </div>
+        <script src="./chat.js"></script>
+    </body>
+</html>

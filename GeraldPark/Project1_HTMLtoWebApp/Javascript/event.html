@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+    <head><title>javascript event</title></head>
+    <body>
+        <button id="button">Click</button>
+        <p id="count">0 회 Click</p>
+        <script>
+            var botton = document.getElementById('button');
+            var element = document.getElementById('count');
+            var count = 0;
+
+            botton.addEventListener('click', function(){
+                count++;
+                element.innerText = count + '회 클릭됨!!'
+            });
+        </script>
+    </body>
+    
+</html>
