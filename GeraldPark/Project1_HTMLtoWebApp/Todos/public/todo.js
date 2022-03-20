@@ -1,5 +1,15 @@
 var todos = {};
 
+$.ajax("http://localhost:3002/todos").done(function(result){
+    console.log(result);
+    todos = result;
+    for(const todo of Object.keys(todos)){
+        var litag = liTemplate(todo, todos[todo]);
+        console.log(litag);
+        $(".content ul").append(litag);
+    }
+})
+
 $("#addButton").click(function(){
     var text = $("#inputBox").val();
     todos[text] = false;
@@ -26,36 +36,39 @@ function buttonTemplate(text) {
 function liTemplate(text, checked) {
     var li = $("<li></li>");
     li.attr("value", text);
-    li.append(inputTemplate(text, checked)); 
+    var input = inputTemplate(text, checked);
+    console.log(input);
+    li.append(input); 
     li.append(text);
     li.append(buttonTemplate(text));
-    console.log("liTemplate");
+    console.log(li);
+
     li.click(function(event){
         var el = $(event.target); //클릭된 타겟의 이벤트를 받아옴 
         console.log(el.data("value")); // 해당 이트가 발생한 태그의 값을 읽어옴 
+
         if (el.is("button")){
             delete todos[text];
             $(`li[value='${text}']`).remove();
             console.log(todos)
-        }else if(el.is("input[type='checkbox']")){
+        }else if(el.is("input[type='checkbox']")) {
             var isChecked = el.is(":checked");
-            if(isChecked){
+            if(isChecked) {
                 $(`li[value='${text}']`).addClass("checked");
                 todos[text]=true;
             }else{
                 $(`li[value='${text}']`).removeClass("checked");
                 todos[text]=false;
             }
-
         }
-    })
-
     saveTodos();
+    });
+    return li;
 }
 
 function saveTodos(){
     $.ajax({
-        url: "http://localhost:3000/todos",
+        url: "http://localhost:3002/todos",
         method: "POST",
         data: JSON.stringify({ todos: todos }),
         DataType : "json",
