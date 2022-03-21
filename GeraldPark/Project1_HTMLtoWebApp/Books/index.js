@@ -10,8 +10,8 @@ app.use(express.static('public'))
 app.use('/router', router);
 app.use('/books', booksRouter)
 
-app.listen(3000,function()
+app.listen(3001,function()
 {
-    console.log('Books 3000포트로 웹서버 실행!')
+    console.log('Books 3001포트로 웹서버 실행!')
 });
 
