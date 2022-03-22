@@ -5,6 +5,7 @@ var save = $('#save');
 var list = $('#list');
 
 function getBooks(){
+    console.log('GetBooks()');
     $.getJSON('/books')
     .done(function(books){
         list.empty();

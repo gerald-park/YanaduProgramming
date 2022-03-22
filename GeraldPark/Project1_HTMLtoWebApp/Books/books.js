@@ -5,10 +5,12 @@ var books = [];
 var id = 1;
 
 router.get('/', function(req, res, next){
+    console.log('booksRouter.Get');
     res.send(books);
 });
 
 router.post('/', function(req, res, next){
+    console.log('booksRouter.post');
     var book = req.body;
     book.id = id;
 
@@ -18,6 +20,7 @@ router.post('/', function(req, res, next){
 });
 
 router.put('/:id', function(req,res,next){
+    console.log('booksRouter.put');
     var index = books.findIndex(function(book){
         return book.id == req.params.id;
     });
@@ -25,6 +28,7 @@ router.put('/:id', function(req,res,next){
 });
 
 router.delete('/:id',function(req,res,next){
+    console.log('booksRouter.delete');
     var index = books.findIndex(function(book){
         return book.id == req.params.id;
     });
