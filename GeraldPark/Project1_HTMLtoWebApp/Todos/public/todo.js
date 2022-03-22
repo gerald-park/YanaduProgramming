@@ -71,7 +71,7 @@ function liTemplate(text, checked) {
 
 function saveTodos(){
     $.ajax({
-        url: "http://localhost:3002/todos",
+        url: aws,
         method: "POST",
         data: JSON.stringify({ todos: todos }),
         DataType : "json",
