@@ -20,5 +20,6 @@ app.post("/todos", function(req, res) {
 });
 
 app.get("/todos", function(req, res) {
+    console.log(todos);
     res.status(200).send(todos);
 });

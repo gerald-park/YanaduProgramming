@@ -5,9 +5,9 @@ var save = $('#save');
 var list = $('#list');
 
 function getBooks(){
-    console.log('GetBooks()');
     $.getJSON('/books')
     .done(function(books){
+        console.log(books);
         list.empty();
         for (var book of books){
             var li = $("<li />");

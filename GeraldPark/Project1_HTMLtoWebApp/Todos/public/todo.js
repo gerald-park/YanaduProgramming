@@ -1,6 +1,9 @@
 var todos = {};
+var aws = 'http://15.165.236.58:3002/todos';
+var localhost = 'http://localhost:3002/todos';
+var server = aws;
 
-$.ajax("http://localhost:3002/todos").done(function(result){
+$.ajax(server).done(function(result){
     console.log(result);
     todos = result;
     for(const todo of Object.keys(todos)){
