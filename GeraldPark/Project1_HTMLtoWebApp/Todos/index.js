@@ -10,7 +10,7 @@ app.use(cros());
 var todos = {"자바스크립트공부하기": true};
 
 app.listen(3002, function() {
-    console.log("App listening on port 3002!");
+    console.log("Todos App listening on port 3002!");
 });
 
 app.post("/todos", function(req, res) {
