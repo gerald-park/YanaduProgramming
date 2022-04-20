@@ -22,7 +22,18 @@ const server = async () => {
                 return res.status(500).send({err: err.message})
             }
         })
-        
+        app.get('/user/:userId', async (req,res) => {
+            console.log(req.params);
+            try{
+                const { userId } = req.params;
+                if(!mongoose.isValidObjectId(userId)) return res.status(400).send("err : Invaild userId");
+                const user = await User.findOne({ _id: userId });
+                return res.send({ user });
+            }catch(err){
+                console.log(err);
+                return res.status(500).send({err: err.message});
+            }
+        })
         app.post('/user', async (req,res) => {
             try{
                 let {username, name} = req.body;
@@ -32,10 +43,22 @@ const server = async () => {
                 await user.save();
                 return res.send({ user })        
             }catch(err){
-                console.log(err)
+                console.log(err);
                 return res.status(500).send({err: err.message}); // 실패 에러 메시지
             }
         })
+        app.delete('/user/:userId', async(req,res) => {
+            try{
+                const { userId } = req.params;
+                if(!mongoose.isValidObjectId(userId)) return res.status(400).send("err : Invaild userId");
+                const user = await User.findOneAndDelete({_id: userId })
+                return res.send({ user });
+            }catch(err){
+                console.log(err);
+                return res.status(500).send({err: err.message});
+            }
+        })
+
         app.listen(3004,() => console.log("server linstening on port 3004"))
     } catch(err){
         console.log(err);
