@@ -1,64 +1,22 @@
 const { json } = require('express');
 const express = require('express');
 const app = express(); 
+const { userRouter } = require('./routes/userRoute');
 const mongoose = require('mongoose');
-const { User } = require('./models/User');
+
 
 const MONGO_URI = 'mongodb+srv://cyanluna:QQOevyzs0mpNlR1c@cluster0.e330g.mongodb.net/BlogService?retryWrites=true&w=majority'
 
 const server = async () => {
     try{
+        //await mongoose.connect(MONGO_URI, {useNewUrlParser: true, useUndifinedTopology:true, useCreateIndex:true, useFindAndModify:false});
         await mongoose.connect(MONGO_URI);
+        mongoose.set('debug',true);
         console.log('mongodb Connected');
 
         app.use(express.json());
-
-        app.get('/user', async (req,res) => {
-            try{
-                const users = await User.find({});
-                return res.send({users:users});
-            }catch(err){
-                console.log(err);
-                return res.status(500).send({err: err.message})
-            }
-        })
-        app.get('/user/:userId', async (req,res) => {
-            console.log(req.params);
-            try{
-                const { userId } = req.params;
-                if(!mongoose.isValidObjectId(userId)) return res.status(400).send("err : Invaild userId");
-                const user = await User.findOne({ _id: userId });
-                return res.send({ user });
-            }catch(err){
-                console.log(err);
-                return res.status(500).send({err: err.message});
-            }
-        })
-        app.post('/user', async (req,res) => {
-            try{
-                let {username, name} = req.body;
-                if(!username) return res.status(400).send({err: "username is required"}); // 잘못된 요청 처리
-                if(!name || !name.first || !name.last) return res.status(400).send({ err : "both first and last names are required"})
-                const user = new User(req.body);
-                await user.save();
-                return res.send({ user })        
-            }catch(err){
-                console.log(err);
-                return res.status(500).send({err: err.message}); // 실패 에러 메시지
-            }
-        })
-        app.delete('/user/:userId', async(req,res) => {
-            try{
-                const { userId } = req.params;
-                if(!mongoose.isValidObjectId(userId)) return res.status(400).send("err : Invaild userId");
-                const user = await User.findOneAndDelete({_id: userId })
-                return res.send({ user });
-            }catch(err){
-                console.log(err);
-                return res.status(500).send({err: err.message});
-            }
-        })
-
+        app.use('/user', userRouter);
+        
         app.listen(3004,() => console.log("server linstening on port 3004"))
     } catch(err){
         console.log(err);
