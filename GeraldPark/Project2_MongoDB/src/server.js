@@ -3,6 +3,7 @@ const express = require("express");
 const app = express();
 const { userRouter } = require("./routes/userRoute");
 const { blogRouter } = require("./routes/blogRoute");
+const { commentRouter } = require("./routes/commentRoute");
 const mongoose = require("mongoose");
 
 const MONGO_URI =
@@ -18,6 +19,7 @@ const server = async () => {
     app.use(express.json());
     app.use("/user", userRouter);
     app.use("/blog", blogRouter);
+    //app.use("/blog/:blogId/comment", commentRouter);
 
     app.listen(3004, () => console.log("server linstening on port 3004"));
   } catch (err) {
