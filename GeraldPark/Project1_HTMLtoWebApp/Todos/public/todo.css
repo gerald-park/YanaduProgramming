@@ -1,0 +1,35 @@
+body {
+    background: skyblue;
+}
+.container{
+    width: 300px;
+    margin : auto;
+}
+.title,
+.contents {
+    background: whitesmoke;
+    box-shadow: 0px 4px 10px 5px rgba(0,0,0, 0.15);
+}
+.title{
+    text-align: center;
+}
+.contents{
+    padding: 10px;
+}
+.input-div {
+    display : flex;
+}
+#inputBox {
+    flex-grow: 1;
+    height: 30px;
+}
+li {
+    list-style: none;
+    margin: 20px 10px;
+}
+#deleteButton{
+    margin: 0px 5px;
+}
+.checked{
+    text-decoration: line-through;
+}
