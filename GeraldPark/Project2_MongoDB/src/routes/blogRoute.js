@@ -20,7 +20,7 @@ blogRouter.post("/", async (req, res) => {
     let user = await User.findById(userId);
     if (!user) res.status(400).send({ err: "user does not exist" });
 
-    let blog = new Blog({ ...req.body, user });
+    let blog = new Blog({ ...req.body, user: user.toObject() });
     await blog.save();
     return res.send({ blog });
   } catch (err) {
