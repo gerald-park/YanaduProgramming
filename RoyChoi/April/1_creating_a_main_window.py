@@ -7,6 +7,9 @@ from PyQt5.QtGui import *
 class MainWindow(QMainWindow):
     def __init__(self, parent=None):
         super().__init__(parent)
+        settings = QSettings()
+        geometry = settings.value('geometry', '')
+        self.restoreGeometry(geometry)
         self.image = QImage()
         self.dirty = False
         self.filename = None
@@ -50,17 +53,74 @@ class MainWindow(QMainWindow):
         fileNewAction.setStatusTip(helpText)
         fileNewAction.triggered.connect(self.fileNew)
 
+        fileCloseAction = QAction("&Close", self)
+        fileCloseAction.triggered.connect(self.close)
 
-        fileMenu = QMenuBar()
+        fileMenu = QMenu("&File", self)
         fileMenu.addAction(fileNewAction)
-        self.setMenuBar(fileMenu)
+        fileMenu.addAction(fileCloseAction)
 
-        toolbar = QToolBar()
-        toolbar.addAction(fileNewAction)
-        self.addToolBar(Qt.TopToolBarArea, toolbar)
+        invertAction = QAction("&Invert", self)
+        boldAction = QAction(QIcon("images/bold.PNG"), "&Bold", self)
+        boldAction.setCheckable(True)
+        boldAction.triggered.connect(self.print_checked_option)
+        lightAction = QAction(QIcon("images/light.PNG"), "&Light", self)
+        lightAction.triggered.connect(self.print_checked_option)
+        lightAction.setCheckable(True)
+        lightAction.setChecked(True)
+        alignAction = QAction("&Align", self)
+        editMenu = QMenu("&Edit", self)
+        editMenu.addAction(invertAction)
+        editMenu.addSeparator()
+
+        fontMenu = QMenu("&Font", self)
+
+        self.fontActionGroup = QActionGroup(self)
+        self.fontActionGroup.addAction(boldAction)
+        self.fontActionGroup.addAction(lightAction)
+
+        fontMenu.addAction(boldAction)
+        fontMenu.addAction(lightAction)
+        fontMenu.addSeparator()
+        fontMenu.addAction(alignAction)
+
+        self.imageLabel.addAction(lightAction)
+        self.imageLabel.addAction(boldAction)
+
+        editMenu.addMenu(fontMenu)
+
+        MenuBar = QMenuBar()
+        MenuBar.addMenu(fileMenu)
+        MenuBar.addMenu(editMenu)
+        self.setMenuBar(MenuBar)
+
+        fileToolbar = QToolBar()
+        fileToolbar.addAction(fileNewAction)
+        self.addToolBar(Qt.TopToolBarArea, fileToolbar)
+
+        editToolbar = QToolBar()
+        editLabel = QLabel("Edit")
+        editToolbar.addWidget(editLabel)
+        editToolbar.addAction(boldAction)
+        editToolbar.addAction(lightAction)
+        self.addToolBar(Qt.TopToolBarArea, editToolbar)
+
+
+
+    def closeEvent(self, event):
+        print('terminating..')
+        settings = QSettings()
+        geometry = self.saveGeometry()
+        settings.setValue('geometry', geometry)
 
     def fileNew(self):
         print('Hi')
+
+    def print_checked_option(self):
+        print(self.fontActionGroup.checkedAction().text())
+
+    def contextMenuEvent(self, event):
+        print('context menu')
 
 class Form(QDialog):
     def __init__(self, parent=None):
@@ -73,6 +133,9 @@ class Form(QDialog):
         self.setLayout(gridLayout)
 
 app = QApplication(sys.argv)
+app.setOrganizationName('Roys')
+app.setOrganizationDomain('KR')
+app.setApplicationName("Test main window")
 main = MainWindow()
 main.show()
 app.exec_()

@@ -27,7 +27,7 @@ class Form(QMainWindow):
         self.server = None
 
         # Define a table widget
-        self.tableWidget = QTableWidget()
+        self.tableWidget = CustomTable()
         self.tableWidget.setRowCount(10)
         self.tableWidget.setColumnCount(1)
 
@@ -50,7 +50,7 @@ class Form(QMainWindow):
         disconnectionAction.setIcon(QIcon("images/disconnection.png"))
         helpText = "Disconnect communication"
         disconnectionAction.setStatusTip(helpText)
-        disconnectionAction.triggered.connect(self._close_server)
+        disconnectionAction.triggered.connect(self.close_server)
 
         setupAction = QAction("&Setup", self)
         helpText = "Setup slave definition"
@@ -74,23 +74,12 @@ class Form(QMainWindow):
         self.statusBar.showMessage("Ready", 5000)
         self.statusBar.addPermanentWidget(self.sizeLabel)
 
-        self.tableWidget.itemChanged.connect(self._handler_cell_value_changed)
+        self.tableWidget.itemChanged.connect(self.handler_cell_value_changed)
         self.ask_server_definition()
         self.ask_slave_definition()
 
     def resizeEvent(self, event):
         self.sizeLabel.setText("{0}, {1}".format(event.size().width(), event.size().height()))
-
-    def _close_server(self):
-        try:
-            if self.server is not None:
-                if self.server.is_run:
-                    self.server.stop()
-                    self.statusBar.showMessage("Server disconnected successfully", 5000)
-                    print('Server disconnected successfully')
-        except Exception as e:
-            print(e)
-            QMessageBox.warning(self, 'Disconnection error', 'disconnection failed!')
 
     def ask_server_definition(self):
         if self.connectionForm.exec_():
@@ -98,7 +87,7 @@ class Form(QMainWindow):
                 self.ipAddress, self.port = self.connectionForm.get_connection_info()
             except Exception as e:
                 print(e)
-        self._open_server()
+        self.open_server()
 
     def ask_slave_definition(self):
         if self.slaveDefinitionForm.exec_():
@@ -111,7 +100,19 @@ class Form(QMainWindow):
                 print(e)
                 QMessageBox.warning(self, 'Value error', 'cannot apply the setting!')
 
-    def _open_server(self):
+    # Close server doesn't work properly. Need to investigate
+    def close_server(self):
+        try:
+            if self.server is not None:
+                if self.server.is_run:
+                    self.server.stop()
+                    self.statusBar.showMessage("Server disconnected successfully", 5000)
+                    print('Server disconnected successfully')
+        except Exception as e:
+            print(e)
+            QMessageBox.warning(self, 'Disconnection error', 'disconnection failed!')
+
+    def open_server(self):
         try:
             if self.server is None:
                 self.server = ModbusServer(self.ipAddress, self.port, no_block=True)
@@ -126,7 +127,7 @@ class Form(QMainWindow):
 
     def thread_main(self):
         if self.isThreadRunning:
-            self._handler_data_bank_changed()
+            self.handler_data_bank_changed()
             self.updateModbusDataThread = Timer(0.5, self.thread_main).start()
 
     def start_thread(self):
@@ -139,14 +140,12 @@ class Form(QMainWindow):
             self.updateModbusDataThread.cancel()
 
     def set_default_value(self):
-        self.tableWidget.itemChanged.disconnect(self._handler_cell_value_changed)
+        self.tableWidget.itemChanged.disconnect(self.handler_cell_value_changed)
         self.prevData = DataBank.get_words(self.address, self.quantity)
         columnCount = int(len(self.prevData)/10+1)
         self.columnOffset = int(self.address/10)
         self.rowOffset = self.address - self.columnOffset * 10
-        self.tableWidget.setColumnCount(columnCount)
-        for i in range(columnCount):
-            self.tableWidget.setHorizontalHeaderItem(i, QTableWidgetItem(str((i+self.columnOffset)*10)))
+        self.tableWidget.set_column(columnCount, self.columnOffset)
         for i in range(10):
             self.tableWidget.setVerticalHeaderItem(i, QTableWidgetItem(str(i)))
         for i in range(columnCount * 10):
@@ -155,41 +154,44 @@ class Form(QMainWindow):
             if i >= len(self.prevData) + self.rowOffset or i < self.rowOffset:
                 item = QTableWidgetItem()
                 item.setFlags(Qt.ItemFlag.NoItemFlags)
-                self.tableWidget.setItem(row, col, item)
+                self.tableWidget.set_data(row, col, item)
             else:
-                self.tableWidget.setItem(row, col, QTableWidgetItem(str(self.prevData[i-self.rowOffset])))
+                self.tableWidget.set_data(row, col, QTableWidgetItem(str(self.prevData[i - self.rowOffset])))
         self.tableWidget.viewport().update()
-        self.tableWidget.itemChanged.connect(self._handler_cell_value_changed)
+        self.tableWidget.itemChanged.connect(self.handler_cell_value_changed)
         self.resize(self.tableWidget.width()+176, self.tableWidget.height()+196)
 
-    def _handler_cell_value_changed(self, item):
+    def handler_cell_value_changed(self, item):
+        if not self.tableWidget.is_data_col(item):
+            return
         row = item.row()
         col = item.column()
-        index = col * 10 + row
-        if index >= self.quantity + self.rowOffset:
-            return
-        pre_val = DataBank.get_words(index)[0]
+        address = self.get_address(row, col)
+        pre_val = DataBank.get_words(address)[0]
         if item.text() == str(pre_val):
             return
         else:
             try:
                 val = int(item.text())
-                DataBank.set_words(self.columnOffset*10 + index, [val])
+                DataBank.set_words(address, [val])
             except Exception as e:
                 QMessageBox.warning(self, 'Warning', 'Only integer is acceptable')
                 self.tableWidget.setItem(row, col, QTableWidgetItem(str(pre_val)))
                 print(e)
 
-    def _handler_data_bank_changed(self):
+    def handler_data_bank_changed(self):
         newData = DataBank.get_words(self.address, self.quantity)
         for i in range(self.quantity):
             if self.prevData[i] != newData[i]:
                 index = i + self.address - self.columnOffset * 10
                 row = index % 10
                 col = int(index / 10)
-                self.tableWidget.setItem(row, col, QTableWidgetItem(str(newData[i])))
+                self.tableWidget.set_data(row, col, QTableWidgetItem(str(newData[i])))
                 self.prevData[i] = newData[i]
         self.tableWidget.viewport().update()
+
+    def get_address(self, row, col):
+        return int((col-1)/2)*10+row + self.columnOffset*10
 
 
 class ConnectionForm(QDialog):
@@ -293,6 +295,28 @@ class SlaveDefinitionForm(QDialog):
 
     def get_slave_definition_info(self):
         return self.address, self.quantity
+
+class CustomTable(QTableWidget):
+    def __init__(self, parent=None):
+        super().__init__(parent)
+
+    def set_data(self, row, col, tableWidgetItem):
+        self.setItem(row, col*2+1, tableWidgetItem)
+
+    def set_column(self, columnCount, columnOffset):
+        columnCount = columnCount*2
+        self.setColumnCount(columnCount)
+        for i in range(columnCount):
+            if i % 2 == 0:
+                self.setHorizontalHeaderItem(i, QTableWidgetItem("Name"))
+            else:
+                self.setHorizontalHeaderItem(i, QTableWidgetItem(str((int((i-1)/2)+columnOffset)*10)))
+
+    def is_data_col(self, item):
+        if item.column() % 2 == 1:
+            return True
+        else:
+            return False
 
 
 app = QApplication(sys.argv)
