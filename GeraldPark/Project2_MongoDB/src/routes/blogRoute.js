@@ -1,7 +1,6 @@
 const { Router } = require("express");
 const blogRouter = Router();
-const { Blog } = require("../models/Blog");
-const { User } = require("../models/User");
+const { Blog, User } = require("../models");
 const { isValidObjectId } = require("mongoose");
 const { commentRouter } = require("./commentRoute");
 blogRouter.use("/:blogId/comment", commentRouter);
@@ -21,7 +20,7 @@ blogRouter.post("/", async (req, res) => {
     let user = await User.findById(userId);
     if (!user) res.status(400).send({ err: "user does not exist" });
 
-    let blog = new Blog({ ...req.body, user });
+    let blog = new Blog({ ...req.body, user: user.toObject() });
     await blog.save();
     return res.send({ blog });
   } catch (err) {
