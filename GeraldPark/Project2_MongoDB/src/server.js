@@ -17,7 +17,7 @@ const server = async () => {
     // });
     await mongoose.connect(MONGO_URI);
     //mongoose.set("debug", true);
-    generateFakeData(100, 10, 300);
+    //generateFakeData(100, 10, 300);
     console.log("mongodb Connected");
 
     app.use(express.json());
